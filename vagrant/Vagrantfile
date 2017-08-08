@@ -10,13 +10,12 @@ Vagrant.configure(2) do |config|
     # Puppetmaster on CentOS 7
     puppet.vm.box = "centos/7"
     puppet.vm.hostname = "puppet.thinkedg.com"
-    puppet.vm.network :private_network, ip: "10.0.20.10"
     puppet.hostmanager.aliases = %w(puppet)
-  end 
+ end 
 
   config.vm.define "agent1" do |agent1|
     #Puppet agent on CentoOS 7
-    agent1.vm .box = "centos/7"
+    agent1.vm.box = "centos/7"
     agent1.vm.hostname = "agent1.thinkedg.com"
     agent1.vm.network :private_network, ip: "10.0.20.11"
     agent1.hostmanager.aliases = %w(agent1)
