@@ -20,7 +20,8 @@ Vagrant.configure(2) do |config|
     puppet.vm.network :private_network, ip: "10.0.20.10"
     puppet.hostmanager.aliases = %w(puppet)
     puppet.vm.provision "shell", inline: <<-SHELL
-      sudo yum update -y  
+      sudo yum update -y
+      sudo yum install emacs -y
       sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
       sudo yum install puppetserver -y
       sudo rm -rf /etc/puppetlabs/code
@@ -39,6 +40,12 @@ Vagrant.configure(2) do |config|
     agent1.vm.hostname = "agent1.thinkedg.com"
     agent1.vm.network :private_network, ip: "10.0.20.11"
     agent1.hostmanager.aliases = %w(agent1)
+    agent1.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+      sudo yum install puppet-agent -y
+      sudo service puppet start
+    SHELL
   end
 
   config.vm.define "agent2" do |agent2|
@@ -47,5 +54,13 @@ Vagrant.configure(2) do |config|
     agent2.vm.hostname = "agent2.thinkedg.com"
     agent2.vm.network :private_network, ip: "10.0.20.12"
     agent2.hostmanager.aliases = %w(agent2)
+    agent2.vm.provision "shell", inline: <<-SHELL
+      wget https://apt.puppetlabs.com/puppetlabs-release-pc1-jessie.deb
+      sudo dpkg -i puppetlabs-release-pc1-jessie.deb
+      sudo apt-get update
+      sudo apt-get install puppet-agent -y
+      sudo /opt/puppetlabs/bin/puppet agent --enable
+      sudo service puppet start
+    SHELL
   end
 end
